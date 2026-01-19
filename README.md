@@ -4,7 +4,7 @@
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-green?style=for-the-badge&logo=spring)
 ![AWS](https://img.shields.io/badge/Deployed_on-AWS-232F3E?style=for-the-badge&logo=amazon-aws)
 
-> **Live Demo:** [Link]  
+> **Project is Live on AWS ElasticBeans:** [http://graphrouting.eu-north-1.elasticbeanstalk.com/]  
 > **Research Basis:** "Breaking the Sorting Barrier for Directed Single-Source Shortest Paths" (Duan et al., 2025)
 
 ## Project Overview
