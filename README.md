@@ -24,6 +24,20 @@ It implements a custom **Bucket-Queue architecture** (Linear Time) to replace th
 
 ---
 
+## 💻 Tech Stack
+The application is built using a modern, decoupled architecture designed for scale and maintainability.
+
+| Category | Technology | Usage |
+| :--- | :--- | :--- |
+| **Core Language** | Java 17 | Strict typing, Record classes, and memory management. |
+| **Framework** | Spring Boot 3+| REST API, Dependency Injection, and Web MVC. |
+| **Cloud & DevOps** | AWS | Auto-scaling PaaS deployment (EC2 t3.micro). |
+| **Documentation** |Swagger | Automated API specification and interactive UI. |
+| **Build Tool** | Maven | Dependency management and build automation. |
+| **Frontend** | HTML, CSS, JS | Lightweight, vanilla JS dashboard for benchmarking. |
+
+---
+
 ## System Architecture
 The system follows a decoupled architecture. The frontend is a static dashboard that consumes the Spring Boot REST API hosted on AWS Elastic Beanstalk.
 
