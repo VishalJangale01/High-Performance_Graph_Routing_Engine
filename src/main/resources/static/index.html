@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High-Performance Routing Engine</title>
+    <style>
+        :root { --primary: #2563eb; --bg: #f8fafc; --card: #ffffff; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: #1e293b; margin: 0; padding: 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; }
+
+        /* Header */
+        header { text-align: center; margin-bottom: 40px; }
+        h1 { margin-bottom: 10px; color: #0f172a; }
+        .badge { background: #dbeafe; color: #1e40af; padding: 4px 12px; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; }
+
+        /* Cards */
+        .card { background: var(--card); border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 24px; }
+        h2 { margin-top: 0; font-size: 1.25rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 20px; }
+
+        /* Forms */
+        .form-group { margin-bottom: 16px; }
+        label { display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem; }
+        input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 1rem; box-sizing: border-box; }
+
+        /* Buttons */
+        button { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; width: 100%; }
+        button:hover { background: #1d4ed8; }
+        button:disabled { background: #94a3b8; cursor: not-allowed; }
+
+        /* Results */
+        .result-box { background: #1e293b; color: #38bdf8; padding: 16px; border-radius: 8px; font-family: 'Courier New', Courier, monospace; white-space: pre-wrap; margin-top: 16px; display: none; }
+        .loading { text-align: center; color: #64748b; font-style: italic; margin-top: 10px; display: none; }
+    </style>
+</head>
+<body>
+
+<body>
+
+<div class="container">
+    <header>
+        <h1>High-Performance Routing Engine</h1>
+        <span class="badge">Implementation of Duan et al. (2025)</span>
+    </header>
+
+    <div class="card" style="border-left: 5px solid #2563eb;">
+        <h2>📖 What is this Project?</h2>
+        <p>
+            <strong>The Problem (The "Sorting Barrier"):</strong>
+            Standard routing algorithms like <em>Dijkstra</em> use a Binary Heap to manage routes.
+            This forces the computer to "perfectly sort" every single node by distance, costing time:
+            <span style="background: #eee; padding: 2px 6px; border-radius: 4px; font-family: monospace;">O(m log n)</span>.
+        </p>
+        <p>
+            <strong>The Solution (This Engine):</strong>
+            This project implements the breakthrough 2025 research by <em>Duan et al.</em>
+            Instead of perfect sorting, I engineered a <strong>Bucket Queue</strong> architecture.
+            It groups nodes into "distance buckets" (rough sorting), allowing for <strong>near-linear time complexity</strong>:
+            <span style="background: #dcfce7; padding: 2px 6px; border-radius: 4px; font-family: monospace; color: #166534;">O(m)</span>.
+        </p>
+
+        <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 15px 0;">
+
+        <div style="font-size: 0.9em; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <span style="color: #64748b;">
+                <em><strong>Tech Stack:</strong> Java 17, Spring Boot, AWS Elastic Beanstalk, Custom Data Structures.</em>
+            </span>
+            <a href="https://arxiv.org/pdf/2504.17033" target="_blank" style="color: #2563eb; text-decoration: none; font-weight: 600; border: 1px solid #2563eb; padding: 4px 10px; border-radius: 4px; font-size: 0.85em;">
+                📄 Read Research Paper (arXiv) &rarr;
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>🚀 Live Performance Benchmark</h2>
+        <p>
+            This demo connects to a live <strong>AWS Cloud Server</strong>.
+            It generates a massive random graph in memory and races the standard Dijkstra algorithm against my custom implementation.
+        </p>
+
+        <div style="background: #f1f5f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem;">
+            <strong>ℹ️ How to test:</strong> Try entering <strong>500,000 Nodes</strong> (Sparse Graph) to see the Bucket Queue outperform the Heap.
+        </div>
+
+        <div class="form-group">
+            <label>Number of Nodes (Max: 1,000,000)</label>
+            <input type="number" id="benchNodes" value="100000">
+        </div>
+        <div class="form-group">
+            <label>Number of Edges (Max: 2,000,000)</label>
+            <input type="number" id="benchEdges" value="200000">
+        </div>
+        <button onclick="runBenchmark()">Run Cloud Benchmark</button>
+        <div id="benchLoader" class="loading">
+            ⚙️ Generating Graph on AWS & Racing Algorithms...<br>
+            <small>(Please wait, edges > 1M nodes can take ~50-100 seconds)</small>
+        </div>
+        <div id="benchResult" class="result-box"></div>
+    </div>
+
+    <div class="card" style="border-left: 5px solid #0891b2;">
+        <h2>💾 Export Graph Data</h2>
+        <p>
+            Need proof that the graph exists? Download the raw adjacency list as a text file.
+            <br>
+            <small><em>Note: For 100k nodes, this file might be ~50MB.</em></small>
+        </p>
+
+        <button onclick="downloadGraph()" style="background: #0891b2;">
+            ⬇️ Download graph_data.txt
+        </button>
+        <div id="dlError" style="color: red; margin-top: 10px; display: none;"></div>
+    </div>
+
+    <div class="card">
+        <h2>📍 Path Finder Utility</h2>
+        <p>Verify correctness by finding the actual path between two IDs.</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="form-group">
+                <label>Source Node ID</label>
+                <input type="number" id="sourceNode" value="0">
+            </div>
+            <div class="form-group">
+                <label>Target Node ID</label>
+                <input type="number" id="targetNode" value="50">
+            </div>
+        </div>
+        <button onclick="findPath()" style="background: #059669;">Find Shortest Path</button>
+        <div id="pathLoader" class="loading">Calculating Path...</div>
+        <div id="pathResult" class="result-box"></div>
+    </div>
+</div>
+
+<script>
+    // ----------------------------------------------------
+    // URL TO BE UPDATED BEFORE CLOUD DEPLOYMENT
+    // Example: const API_BASE = "http://graphrouting-env.eba-xyz.us-east-1.elasticbeanstalk.com";
+    const API_BASE = "http://localhost:8080";
+    // ----------------------------------------------------
+
+    async function runBenchmark() {
+        const nodesInput = document.getElementById('benchNodes');
+        const edgesInput = document.getElementById('benchEdges');
+
+        let nodes = parseInt(nodesInput.value);
+        let edges = parseInt(edgesInput.value);
+
+        // FRONTEND GUARDRAIL
+        const MAX_NODES = 1000000;
+        const MAX_EDGES = 2000000;
+
+        if (nodes > MAX_NODES || edges > MAX_EDGES) {
+            alert(`⚠️ Values too high!\n\nPlease keep Nodes < ${MAX_NODES} and Edges < ${MAX_EDGES} to prevent browser/server crash.`);
+            return; // Stop execution
+        }
+
+        showLoading('benchLoader', 'benchResult');
+
+        try {
+            const response = await fetch(`${API_BASE}/api/graph/benchmark?nodes=${nodes}&edges=${edges}`);
+            const text = await response.text(); // Backend returns formatted string
+            displayResult('benchResult', text);
+        } catch (error) {
+            displayResult('benchResult', "Error connecting to backend:\n" + error.message + "\n\n(Did you update the API_BASE URL?)");
+        } finally {
+            hideLoading('benchLoader');
+        }
+    }
+
+    async function findPath() {
+        const from = document.getElementById('sourceNode').value;
+        const to = document.getElementById('targetNode').value;
+
+        showLoading('pathLoader', 'pathResult');
+
+        try {
+            const response = await fetch(`${API_BASE}/api/graph/shortest-path?from=${from}&to=${to}&algo=DUAN`);
+            const text = await response.text();
+            displayResult('pathResult', text);
+        } catch (error) {
+            displayResult('pathResult', "Error:\n" + error.message);
+        } finally {
+            hideLoading('pathLoader');
+        }
+    }
+
+    function showLoading(loaderId, resultId) {
+        document.getElementById(loaderId).style.display = 'block';
+        document.getElementById(resultId).style.display = 'none';
+    }
+
+    function hideLoading(loaderId) {
+        document.getElementById(loaderId).style.display = 'none';
+    }
+
+    function displayResult(elementId, text) {
+        const el = document.getElementById(elementId);
+        el.innerText = text;
+        el.style.display = 'block';
+    }
+
+    function downloadGraph() {
+        // Direct browser download
+        // This triggers the browser's native "Save As" dialog
+        window.location.href = `${API_BASE}/api/graph/download`;
+    }
+</script>
+
+</body>
+</html>
